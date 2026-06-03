@@ -8,7 +8,7 @@ This is a complete step-by-step guide to deploy the Mono Insurance application u
 - An active Azure Subscription
 - Your application code (the `mono-insurance` folder)
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli) installed (used **only** for `az webapp deploy` — the final deploy step)
-- [Node.js 20](https://nodejs.org/) installed locally
+- [Node.js 22](https://nodejs.org/) installed locally
 - [Azure Functions Core Tools v4](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local) installed (for deploying the function)
 
 ---
@@ -110,7 +110,7 @@ This is where uploaded PDFs will be stored and what triggers the OCR function.
    | Resource group | `mono-insurance-rg` |
    | Name | `mono-insurance-api` *(globally unique)* |
    | Publish | **Code** |
-   | Runtime stack | **Node 20 LTS** |
+   | Runtime stack | **Node 22 LTS** |
    | Operating System | **Linux** |
    | Region | Same as Resource Group |
 3. Under **Pricing plan** → Click **"Create new"**
@@ -173,7 +173,7 @@ MONGO_URI="<your_cosmos_db_connection_string>" node src/seeders/seed.js
    | Field | Value |
    |---|---|
    | Name | `mono-insurance-web` *(globally unique)* |
-   | Runtime stack | **Node 20 LTS** |
+   | Runtime stack | **Node 22 LTS** |
    | App Service Plan | Select `mono-insurance-plan` *(reuse existing)* |
 
 2. **Build the frontend** locally:
@@ -242,7 +242,7 @@ The Application Gateway routes external traffic to your App Services.
    | Resource group | `mono-insurance-rg` |
    | Function App name | `mono-insurance-ocr-fn` *(globally unique)* |
    | Runtime stack | **Node.js** |
-   | Version | **20 LTS** |
+   | Version | **22 LTS** |
    | Region | Same as Resource Group |
    | Operating System | **Linux** |
    | Hosting plan | **Consumption (Serverless)** *(pay-per-use, free tier available)* |
