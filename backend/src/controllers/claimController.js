@@ -161,17 +161,25 @@ const updateOcr = async (req, res) => {
     }
 
     // Match the claim by checking if pdfPath contains the blobName
+    // Populate user so we can return the email for notification
     const claim = await Claim.findOneAndUpdate(
       { pdfPath: { $regex: blobName.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&') } },
       { $set: { ocrText: ocrText || '', ocrStatus: ocrStatus || 'failed', ocrProcessedAt: new Date() } },
       { new: true }
-    );
+    ).populate('user', 'name email');
 
     if (!claim) {
       return res.status(404).json({ success: false, message: `No claim found matching blob: ${blobName}` });
     }
 
-    res.json({ success: true, message: 'OCR result updated.', claimId: claim._id, ocrStatus: claim.ocrStatus });
+    res.json({
+      success: true,
+      message: 'OCR result updated.',
+      claimId: claim._id,
+      ocrStatus: claim.ocrStatus,
+      customerEmail: claim.user?.email || null,
+      customerName: claim.user?.name || 'Customer',
+    });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
