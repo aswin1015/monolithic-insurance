@@ -1,0 +1,16 @@
+{
+  "name": "mono-insurance-ocr-function",
+  "version": "1.0.0",
+  "description": "Azure Function for OCR processing of insurance claim PDFs",
+  "scripts": {
+    "start": "func start",
+    "test": "echo \"No tests yet\""
+  },
+  "dependencies": {
+    "mongodb": "^6.7.0",
+    "pdf-parse": "^1.1.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

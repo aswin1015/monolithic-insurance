@@ -1,0 +1,12 @@
+{
+  "bindings": [
+    {
+      "name": "myBlob",
+      "type": "blobTrigger",
+      "direction": "in",
+      "path": "insurance-claims/{blobName}",
+      "connection": "AzureWebJobsStorage",
+      "dataType": "binary"
+    }
+  ]
+}
