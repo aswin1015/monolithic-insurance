@@ -145,4 +145,36 @@ const getClaimById = async (req, res) => {
   }
 };
 
-module.exports = { submitClaim, getMyClaims, getClaimById };
+// @desc    Internal endpoint for Azure Function to update OCR result
+// @route   POST /api/claims/update-ocr
+// @access  Internal (protected by INTERNAL_API_KEY)
+const updateOcr = async (req, res) => {
+  try {
+    const apiKey = req.headers['x-internal-api-key'];
+    if (!apiKey || apiKey !== process.env.INTERNAL_API_KEY) {
+      return res.status(401).json({ success: false, message: 'Unauthorized.' });
+    }
+
+    const { blobName, ocrText, ocrStatus } = req.body;
+    if (!blobName) {
+      return res.status(400).json({ success: false, message: 'blobName is required.' });
+    }
+
+    // Match the claim by checking if pdfPath contains the blobName
+    const claim = await Claim.findOneAndUpdate(
+      { pdfPath: { $regex: blobName.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&') } },
+      { $set: { ocrText: ocrText || '', ocrStatus: ocrStatus || 'failed', ocrProcessedAt: new Date() } },
+      { new: true }
+    );
+
+    if (!claim) {
+      return res.status(404).json({ success: false, message: `No claim found matching blob: ${blobName}` });
+    }
+
+    res.json({ success: true, message: 'OCR result updated.', claimId: claim._id, ocrStatus: claim.ocrStatus });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+module.exports = { submitClaim, getMyClaims, getClaimById, updateOcr };
