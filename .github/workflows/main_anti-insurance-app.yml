@@ -24,18 +24,28 @@ jobs:
         with:
           node-version: '22.x'
           cache: 'npm'
-          cache-dependency-path: backend/package-lock.json
+
+      - name: Install and build frontend
+        working-directory: frontend
+        run: |
+          npm ci
+          npm run build
 
       - name: Install backend dependencies
         working-directory: backend
         run: npm ci
+
+      - name: Copy frontend build to backend public directory
+        run: |
+          mkdir -p backend/public
+          cp -r frontend/dist/* backend/public/
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: node-app
           path: backend
-          # Only upload the backend folder — the App Service runs Express
+          # Upload the backend folder (which now contains the compiled frontend in /public)
 
   deploy:
     runs-on: ubuntu-latest

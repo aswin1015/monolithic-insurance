@@ -37,9 +37,17 @@ app.get('/api/health', (req, res) => {
   res.json({ success: true, message: 'Mono Insurance API is running 🚀', timestamp: new Date() });
 });
 
-// 404 handler
-app.use('*', (req, res) => {
+// Serve static frontend files (must build frontend into backend/public)
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
+// 404 handler for unknown API routes
+app.use('/api/*', (req, res) => {
   res.status(404).json({ success: false, message: 'API route not found.' });
+});
+
+// Catch-all for SPA: serve frontend index.html for all non-API routes
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 // Global error handler
