@@ -146,12 +146,12 @@ const getClaimById = async (req, res) => {
 };
 
 // @desc    Internal endpoint for Azure Function to update OCR result
-// @route   POST /api/claims/update-ocr
-// @access  Internal (protected by INTERNAL_API_KEY)
+// @route   POST /api/claims/internal/update-ocr
+// @access  Internal (protected by OCR_SECRET)
 const updateOcr = async (req, res) => {
   try {
-    const apiKey = req.headers['x-internal-api-key'];
-    if (!apiKey || apiKey !== process.env.INTERNAL_API_KEY) {
+    const apiKey = req.headers['x-ocr-secret'];
+    if (!apiKey || apiKey !== process.env.OCR_SECRET) {
       return res.status(401).json({ success: false, message: 'Unauthorized.' });
     }
 
