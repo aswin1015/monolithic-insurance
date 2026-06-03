@@ -45,10 +45,7 @@ export const policiesAPI = {
 
 // ── Claims ────────────────────────────────────────────────────────
 export const claimsAPI = {
-  submit: (formData) =>
-    api.post('/claims', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }),
+  submit: (formData) => api.post('/claims', formData),
   getMy: () => api.get('/claims/my'),
   getById: (id) => api.get(`/claims/${id}`),
 };
